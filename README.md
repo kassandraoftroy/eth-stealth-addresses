@@ -4,12 +4,10 @@ rust library implementing ERC-5564 stealth addresses using canonical ECC over th
 
 let's make privacy on evm chains a reality!
 
-## Usage
-
-for now just clone the repo and execute:
+## Test
 
 ```
-cargo run
+cargo test
 ```
 
 to test the basic functionality.
