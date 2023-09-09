@@ -1,4 +1,3 @@
-use hex;
 use rand;
 use generic_array::GenericArray;
 use k256;
@@ -18,8 +17,8 @@ pub fn generate_stealth_address(
     let r = k256::Scalar::generate_biased(&mut rand::thread_rng());
     let (spend_pk_point, view_pk_point) = decode_stealth_meta_address(stealth_meta_address);
     let (stealth_pk_point, view_tag) = get_stealth_pubkey(spend_pk_point, view_pk_point, r);
-    let stealth_address = get_address_from_pubkey(stealth_pk_point);
-    let ephemeral_pubkey = encode_pubkey(get_pubkey_from_priv(r));
+    let stealth_address: Address = get_address_from_pubkey(stealth_pk_point);
+    let ephemeral_pubkey: PublicKeyCompressed = encode_pubkey(get_pubkey_from_priv(r));
 
     (stealth_address, ephemeral_pubkey, view_tag)
 }
@@ -34,7 +33,7 @@ pub fn check_stealth_address(
         decode_pubkey(&ephemeral_pubkey),
         decode_priv(&viewing_key),
     );
-    let check = get_address_from_pubkey(
+    let check: Address = get_address_from_pubkey(
         decode_pubkey(&spending_pubkey) + get_pubkey_from_priv(shared_secret),
     );
 
@@ -76,9 +75,30 @@ pub fn compute_stealth_key(
     let stealth_key_scalar = shared_secret + decode_priv(&spending_key);
     let stealth_address_check = get_address_from_pubkey(get_pubkey_from_priv(stealth_key_scalar));
     if stealth_address_check != *stealth_address {
-        panic!("stealth key does not match stealth address (spend/view keys are not recipient)");
+        panic!("keys do not generate stealth address");
     }
     return encode_priv(stealth_key_scalar);
+}
+
+pub fn generate_stealth_meta_address() -> (StealthMetaAddress, PrivateKey, PrivateKey) {
+    let rng = &mut rand::thread_rng();
+    let s = k256::Scalar::generate_biased(rng);
+    let v = k256::Scalar::generate_biased(rng);
+    let pks = get_pubkey_from_priv(s);
+    let pkv = get_pubkey_from_priv(v);
+
+    return (encode_stealth_meta_address(pks, pkv), encode_priv(s), encode_priv(v));
+}
+
+pub fn split_stealth_meta_address(
+    encoded: &StealthMetaAddress,
+) -> (PublicKeyCompressed, PublicKeyCompressed) {
+    let mut front = encoded.to_vec();
+    let back = front.split_off(33);
+    let front_arr = front.as_slice().try_into().unwrap();
+    let back_arr = back.as_slice().try_into().unwrap();
+
+    (front_arr, back_arr)
 }
 
 pub fn encode_stealth_meta_address(
@@ -86,7 +106,7 @@ pub fn encode_stealth_meta_address(
     pkv: k256::ProjectivePoint,
 ) -> StealthMetaAddress {
     let b = [pks.to_bytes(), pkv.to_bytes()].concat();
-    let arr: StealthMetaAddress = b.as_slice().try_into().unwrap();
+    let arr = b.as_slice().try_into().unwrap();
 
     arr
 }
@@ -94,17 +114,14 @@ pub fn encode_stealth_meta_address(
 pub fn decode_stealth_meta_address(
     encoded: &StealthMetaAddress,
 ) -> (k256::ProjectivePoint, k256::ProjectivePoint) {
-    let mut front = encoded.to_vec();
-    let back = front.split_off(33);
-    let front_arr: PublicKeyCompressed = front.as_slice().try_into().unwrap();
-    let back_arr: PublicKeyCompressed = back.as_slice().try_into().unwrap();
+    let (front_arr, back_arr) = split_stealth_meta_address(encoded);
 
     return (decode_pubkey(&front_arr), decode_pubkey(&back_arr));
 }
 
 pub fn encode_pubkey(x: k256::ProjectivePoint) -> PublicKeyCompressed {
     let b = x.to_bytes();
-    let arr: PublicKeyCompressed = b.as_slice().try_into().unwrap();
+    let arr = b.as_slice().try_into().unwrap();
 
     arr
 }
@@ -147,10 +164,6 @@ pub fn get_address_from_pubkey(pubkey: k256::ProjectivePoint) -> Address {
     let address: Address = address_raw[12..].try_into().unwrap();
 
     address
-}
-
-pub fn hexlify(a: &[u8]) -> String {
-    return hex::encode(a);
 }
 
 fn strip_uncompressed_pubkey(a: &PublicKeyUncompressed) -> [u8; 64] {

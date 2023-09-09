@@ -131,6 +131,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "eth-stealth-addresses"
+version = "0.1.0"
+dependencies = [
+ "generic-array",
+ "k256",
+ "rand",
+ "secp256k1",
+ "sha3",
+]
+
+[[package]]
 name = "ff"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -172,12 +183,6 @@ dependencies = [
  "rand_core",
  "subtle",
 ]
-
-[[package]]
-name = "hex"
-version = "0.4.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
 name = "hmac"
@@ -350,18 +355,6 @@ checksum = "9d1e996ef02c474957d681f1b05213dfb0abab947b446a62d37770b23500184a"
 dependencies = [
  "base64ct",
  "der",
-]
-
-[[package]]
-name = "stealth_addresses"
-version = "0.1.0"
-dependencies = [
- "generic-array",
- "hex",
- "k256",
- "rand",
- "secp256k1",
- "sha3",
 ]
 
 [[package]]

@@ -1,13 +1,17 @@
 [package]
-name = "stealth_addresses"
+name = "eth-stealth-addresses"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["kassandra.eth 0xDADA@protonmail.com"]
+license = "MIT"
+description = "stealth addresses library for ethereum, implementing ERC-5564 over secp256k1 in rust"
+readme = "README.md"
+homepage = "https://github.com/kassandraoftroy/eth-stealth-addresses"
+repository = "https://github.com/kassandraoftroy/eth-stealth-addresses"
+keywords = ["ethereum", "eth", "privacy", "stealth", "secp256k1"]
 
 [dependencies]
 generic-array = "0.14.7"
-hex = "0.4.3"
 k256 = "0.13.1"
 rand = "0.8.5"
 secp256k1 = "0.27.0"
