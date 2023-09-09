@@ -6,10 +6,22 @@ let's make privacy on evm chains a reality!
 
 ## Usage
 
-this is a library that hadnles the core cryptographic functions of the ERC-5564 spec. If you are build a rust project that could make use of this library add it with:
+Add this library to your rust project with:
 
 ```
 cargo add eth-stealth-addresses
+```
+
+Use it:
+
+```rust
+use eth_stealth_addresses::{generate_stealth_meta_address}
+
+fn main() {
+    let (stealth_meta_address, spending_key, viewing_key) = generate_stealth_meta_address();
+
+    // do stuff
+}
 ```
 
 ## Test
