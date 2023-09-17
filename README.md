@@ -24,6 +24,14 @@ fn main() {
 }
 ```
 
+Or invoke the basic utilities this library offers from the command line with the cli:
+
+```
+cargo install stealthereum-cli
+```
+
+For cli source code and documentation [see here](https://github.com/kassandraoftroy/stealthereum-cli)
+
 ## Test
 
 ```
