@@ -4,6 +4,8 @@ rust library implementing ERC-5564 stealth addresses using canonical ECC over th
 
 let's make privacy on evm chains a reality!
 
+NOT AUDITED - HOMEROLLED CRYPTO - USE AT YOUR OWN RISK
+
 ## Usage
 
 Add this library to your rust project with:
